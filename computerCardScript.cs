@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-
+using TMPro;
 public class computerCardScript : MonoBehaviour, IPointerClickHandler
 {
     // Hedef pozisyonlar
@@ -10,6 +10,9 @@ public class computerCardScript : MonoBehaviour, IPointerClickHandler
     private Vector3 originalScale; // Kartın başlangıç boyutu
     private static bool[] positionOccupied = new bool[3]; // Hedef pozisyonların doluluk durumunu takip eder
     private int assignedTargetIndex = -1; // Kartın atandığı hedef pozisyonun indexi (-1 başlangıç pozisyonunu temsil eder)
+
+
+    
     void Start()
     {
         // Kartın başlangıç pozisyonunu ve boyutunu kaydet
@@ -46,7 +49,7 @@ public class computerCardScript : MonoBehaviour, IPointerClickHandler
         {
             // Kart bir hedef pozisyondaysa, başlangıç pozisyonuna geri dön ve eski boyuta küçült
             
-
+    
             MoveToPositionAndScale(originalPosition, originalScale);
             
 

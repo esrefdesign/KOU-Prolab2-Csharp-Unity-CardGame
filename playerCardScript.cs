@@ -14,14 +14,25 @@ public class PlayerCardScript : MonoBehaviour, IPointerClickHandler
     private Vector3 originalScale; // Kartın başlangıç boyutu
     private static bool[] positionOccupied = new bool[3]; // Hedef pozisyonların doluluk durumunu takip eder
     private int assignedTargetIndex = -1; // Kartın atandığı hedef pozisyonun indexi (-1 başlangıç pozisyonunu temsil eder)
-    public bool isSelected;
+    private bool isSelected;
     // Seçilen kartlar listesi
-    public float scaleMultiplier = 1.2f; 
+    private float scaleMultiplier = 1.2f; 
      // Reference to the description text
-    public Image iconImage; // Reference to the image
 
-    // Method to update the card's UI dynamically
-
+    public TMP_Text cardText,saglikText; // TextMeshPro için referans
+   
+    // Kart bilgilerini dinamik olarak ayarla
+    public void SetCardInfo(string text,string saglik)
+    {
+        if (cardText != null)
+        {
+            cardText.text = text; // Text'i güncelle
+        }
+        if (saglikText!=null)
+        {
+            saglikText.text=saglik;
+        }
+    }
     void Start()
     {
         
@@ -80,10 +91,10 @@ private void AddEventTrigger()
            isSelected= false;
        
             // Kart bir hedef pozisyondaysa, başlangıç pozisyonuna geri dön ve eski boyuta küçült
-            Debug.Log(originalPosition);
+            
 
             MoveToPositionAndScale(originalPosition, originalScale);
-            Debug.Log(originalPosition);
+            
 
             positionOccupied[assignedTargetIndex] = false; // Hedef pozisyonu boş olarak işaretle
             assignedTargetIndex = -1; // Kartı başlangıç pozisyonuna at

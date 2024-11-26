@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 
-
-
     // Abstract Savaş Araçları Sınıfı
     abstract class Savas_Araclari 
     {
@@ -21,6 +19,8 @@ using UnityEngine;
         public abstract int VurusAvantaji { get; }
 
         public abstract bool Secilmis { get; set; }
+        public abstract bool isSelected { get; set; }
+
 
 
 
@@ -61,6 +61,8 @@ using UnityEngine;
         public override string Avantaj => "Kara";
 
         public override bool Secilmis { get; set; } = false;
+        public override bool isSelected { get; set; } = false;
+
 
 
 
@@ -92,6 +94,8 @@ using UnityEngine;
         public override string AltSinif { get; set; } = "Siha";
         public override string Avantaj => "Kara";
         public override bool Secilmis { get; set; } = false;
+        public override bool isSelected { get; set; } = false;
+
 
         public override int VurusAvantaji { get; } = 10;
         //public override int HavaVurusAvantaji { get; } = 0;
@@ -130,6 +134,8 @@ using UnityEngine;
         public override string AltSinif => "Obüs";
         public override string Avantaj => "Deniz";
         public override bool Secilmis { get; set; } = false;
+        public override bool isSelected { get; set; } = false;
+
 
         public override int VurusAvantaji => 5;
         //public override int HavaVurusAvantaji => 0;
@@ -156,6 +162,8 @@ using UnityEngine;
         public override string AltSinif => "KFS";
         public override string Avantaj => "Deniz";
         public override bool Secilmis { get; set; } = false;
+        public override bool isSelected { get; set; } = false;
+
 
         public override int VurusAvantaji => 10;
         //public override int HavaVurusAvantaji => 0;
@@ -179,6 +187,8 @@ using UnityEngine;
         public override string AltSinif { get; set; }
         public override int VurusAvantaji { get; }
         public override bool Secilmis { get; set; } = false;
+        public override bool isSelected { get; set; } = false;
+
 
         protected Deniz_Araclari(int seviyePuani)
         {
@@ -221,6 +231,8 @@ using UnityEngine;
         public override string AltSinif => "Sida";
         public override string Avantaj => "Hava";
         public override bool Secilmis { get; set; } = false;
+        public override bool isSelected { get; set; } = false;
+
 
         public override int VurusAvantaji => 10;
         //public override int DenizVurusAvantaji => 0;

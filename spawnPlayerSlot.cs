@@ -17,27 +17,20 @@ public class spawnPlayerSlot : MonoBehaviour
     public float spacing = 50f; // Prefabler arasındaki boşluk miktarı
     List<Savas_Araclari> cardlist = new List<Savas_Araclari>();
     public Dictionary<string, GameObject> prefabDictionary;
-    
-    public Button logButton;      // Button referansı
-    
-    public TextMeshProUGUI level; // Reference to the title text
-    
-    
-    public InputFieldLogger value = FindAnyObjectByType<InputFieldLogger>();
-
+    public Button logButton;      // Button referansı  
+    public InputFieldLogger inputFieldLogger;
+    public int baslangic,saglik;
     
     public void Start()
     {
         logButton.onClick.AddListener(starterInput);
-        
     }
 
     void starterInput(){
     
-
         
-        
-        GenerateTestCardList(value.inputValue);
+        baslangic=Convert.ToInt32(inputFieldLogger.inputValue);
+        GenerateTestCardList(baslangic);
         
         prefabDictionary = new Dictionary<string, GameObject>
         {
@@ -46,7 +39,7 @@ public class spawnPlayerSlot : MonoBehaviour
             { "Firkateyn", fikrateynPrefab }
             // Diger isimlere karsilik gelen prefablar burada eklenebilir
         };
-        SpawnPrefabs();
+        SpawnPrefabs(baslangic.ToString(),saglik.ToString());
     }
     public void GenerateTestCardList(int input)
     {
@@ -101,20 +94,19 @@ public class spawnPlayerSlot : MonoBehaviour
 
     }
 
-   public void SpawnPrefabs()
+   public void SpawnPrefabs(string text,string saglik)
    {   
-       int i=0;
+        int i=0;
+        
 
        foreach (Savas_Araclari card in cardlist)
         {
             if (prefabDictionary.ContainsKey(card.AltSinif))
             {
-
-                card.SeviyePuani=value.inputValue;
-                level.text=card.SeviyePuani.ToString();
+                
                 // Prefabı al
                 GameObject prefabToSpawn = prefabDictionary[card.AltSinif];
-
+                
                 // Prefabı spawnla
                 GameObject spawnedCard = Instantiate(prefabToSpawn, parentTransform);
 
@@ -122,6 +114,14 @@ public class spawnPlayerSlot : MonoBehaviour
                 
                 RectTransform rectTransform = spawnedCard.GetComponent<RectTransform>();
 
+                PlayerCardScript cardScript = prefabToSpawn.GetComponent<PlayerCardScript>();
+
+                if (cardScript != null)
+                {
+                    // Kart bilgilerini gönder
+                    cardScript.SetCardInfo(text,card.Dayaniklilik.ToString());
+                    
+                }
                 // Bir sonraki spawn pozisyonunu ayarla
                 rectTransform.anchoredPosition = new Vector2(i*spacing, 0);
                 i++;
