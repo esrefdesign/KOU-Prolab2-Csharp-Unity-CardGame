@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f32d4df90ac8e934f851c9aeb3379c60
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - obusPrefab: {fileID: 7014833829099959643, guid: 52e43fdfdab337c45832a4f3c93dcd87, type: 3}
+  - ucakPrefab: {fileID: 7014833829099959643, guid: e6d031a84dbf1e142b15189c4f02ab68, type: 3}
+  - fikrateynPrefab: {fileID: 7014833829099959643, guid: 31f2de577ae93d9498797c4115d21d06, type: 3}
+  - otherPrefab: {instanceID: 0}
+  - parentTransform: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
