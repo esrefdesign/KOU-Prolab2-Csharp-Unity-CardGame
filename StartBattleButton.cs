@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class StartBattleButton : MonoBehaviour
 {
+
+    private spawnComputerSlot computerSlot;
     private spawnPlayerSlot spawnPlayerSlot;  // Kartları yöneten sınıf
     private BattleManager battleManager;      // Savaşı yöneten sınıf
     public Button startButton;
@@ -11,6 +13,7 @@ public class StartBattleButton : MonoBehaviour
     public void Start()
     {
         // spawnPlayerSlot ve battleManager referanslarını bulalım
+        computerSlot = FindAnyObjectByType<spawnComputerSlot>();
         spawnPlayerSlot = FindFirstObjectByType<spawnPlayerSlot>();
         battleManager = FindAnyObjectByType<BattleManager>();
 
@@ -40,6 +43,8 @@ public class StartBattleButton : MonoBehaviour
         }
 
         // Seçilen kartları BattleManager'a gönder
-        battleManager.StartBattle(spawnPlayerSlot.selectedCards);
+        battleManager.InitializeLists(spawnPlayerSlot.selectedCards,spawnPlayerSlot.cardlist,spawnPlayerSlot.parentTransform,computerSlot.parentTransform);
     }
+
+    
 }

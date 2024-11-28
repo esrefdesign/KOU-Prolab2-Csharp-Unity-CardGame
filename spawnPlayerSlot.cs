@@ -20,7 +20,7 @@ public class spawnPlayerSlot : MonoBehaviour
     public InputFieldLogger inputFieldLogger;
 
     public Dictionary<string, GameObject> prefabDictionary;
-
+    public int baslangic;
     public PlayerCardScript playerCard;
     private CardSelectHandler cardSelectHandler;
     private void Start()
@@ -30,7 +30,7 @@ public class spawnPlayerSlot : MonoBehaviour
 
     private void StarterInput()
     {
-        int baslangic = Convert.ToInt32(inputFieldLogger.inputValue);
+        baslangic = Convert.ToInt32(inputFieldLogger.inputValue);
         
         // Kart listesini oluştur
         GenerateTestCardList(baslangic);
@@ -59,9 +59,9 @@ public class spawnPlayerSlot : MonoBehaviour
         targetPositions = new Vector3[maxPositions];
         positionOccupied = new bool[maxPositions];
 
-        int startX = 280;
-        int startY = 180;
-        float positionSpacing = 50f;
+        int startX = 70;
+        int startY = 200;
+        float positionSpacing = 80f;
 
         for (int i = 0; i < maxPositions; i++)
         {

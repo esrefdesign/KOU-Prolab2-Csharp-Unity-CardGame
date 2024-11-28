@@ -8,7 +8,6 @@ public class InputFieldLogger : MonoBehaviour
     
     public InputField inputField; // InputField referansı
     public Button logButton;      // Button referansı
-    public spawnPlayerSlot spawnPlayerSlotScript;
     public int inputValue ;
    
     public void Start()
