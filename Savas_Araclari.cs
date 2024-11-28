@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
     // Abstract Savaş Araçları Sınıfı
-    abstract class Savas_Araclari 
+    public abstract class Savas_Araclari 
     {
         public int SeviyePuani { get; set; }
         public abstract int Dayaniklilik { get; set; }

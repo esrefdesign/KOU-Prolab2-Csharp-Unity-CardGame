@@ -1,9 +1,10 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TMPInputToInteger : MonoBehaviour
 {
-    public TMP_InputField inputField; // TMP_InputField referansı
+    public InputField inputField; // TMP_InputField referansı
     public int intValue;              // Çevrilen int değer
 
     // Bu metod InputField içeriği değiştiğinde çağrılır

@@ -1,135 +1,134 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEditor.U2D.Aseprite;
+
 public class spawnPlayerSlot : MonoBehaviour
 {
-    
-    public GameObject obusPrefab; // Prefab sablonunuz
-    public GameObject ucakPrefab; // Prefab sablonunuz
-    public GameObject fikrateynPrefab; // Prefab sablonunuz
-    public GameObject otherPrefab ; // Prefab sablonunuz
-     // Prefab sablonunuz
-    public Transform parentTransform; // Prefablerin eklenecegi Canvas uzerindeki ebeveyn objesi
-    public int numberOfElements = 6; // Kaç tane prefab oluşturulacak
-    public float spacing = 50f; // Prefabler arasındaki boşluk miktarı
-    List<Savas_Araclari> cardlist = new List<Savas_Araclari>();
-    public Dictionary<string, GameObject> prefabDictionary;
-    public Button logButton;      // Button referansı  
+    public GameObject obusPrefab, ucakPrefab, fikrateynPrefab, kfsPrefab, sidaPrefab, sihaPrefab;
+
+    private Vector3[] targetPositions;
+    private static bool[] positionOccupied;
+    public Transform parentTransform; // Prefablerin ekleneceği Canvas üzerindeki ebeveyn objesi
+    public float spacing = 150f; // Prefabler arası boşluk
+    public List<Savas_Araclari> cardlist = new List<Savas_Araclari>();
+    public List<Savas_Araclari> selectedCards = new List<Savas_Araclari>();
+
+    public Button logButton; // Button referansı
     public InputFieldLogger inputFieldLogger;
-    public int baslangic,saglik;
-    
-    public void Start()
+
+    public Dictionary<string, GameObject> prefabDictionary;
+
+    public PlayerCardScript playerCard;
+    private CardSelectHandler cardSelectHandler;
+    private void Start()
     {
-        logButton.onClick.AddListener(starterInput);
+        logButton.onClick.AddListener(StarterInput);
     }
 
-    void starterInput(){
-    
+    private void StarterInput()
+    {
+        int baslangic = Convert.ToInt32(inputFieldLogger.inputValue);
         
-        baslangic=Convert.ToInt32(inputFieldLogger.inputValue);
+        // Kart listesini oluştur
         GenerateTestCardList(baslangic);
-        
+
+        // Prefab Dictionary oluştur
         prefabDictionary = new Dictionary<string, GameObject>
         {
             { "Obüs", obusPrefab },
             { "Ucak", ucakPrefab },
-            { "Firkateyn", fikrateynPrefab }
-            // Diger isimlere karsilik gelen prefablar burada eklenebilir
+            { "Firkateyn", fikrateynPrefab },
+            { "KFS", kfsPrefab },
+            { "Sida", sidaPrefab },
+            { "Siha", sihaPrefab }
         };
-        SpawnPrefabs(baslangic.ToString(),saglik.ToString());
+
+        // Hedef pozisyonları ve doluluk durumunu başlat
+        InitializeTargetPositions();
+
+        // Prefableri spawnla
+        SpawnPrefabs(baslangic);
     }
+
+    private void InitializeTargetPositions()
+    {
+        int maxPositions = 3; // Hedef pozisyon sayısı
+        targetPositions = new Vector3[maxPositions];
+        positionOccupied = new bool[maxPositions];
+
+        int startX = 280;
+        int startY = 180;
+        float positionSpacing = 50f;
+
+        for (int i = 0; i < maxPositions; i++)
+        {
+            targetPositions[i] = new Vector3(startX + i * positionSpacing, startY, 0);
+        }
+    }
+
     public void GenerateTestCardList(int input)
     {
-        
-        //kodun burasi liste dizisi olusturuyor ve kullaniciya rastgele nesneler vermemizi saglayacak
-        
-        List<Savas_Araclari>[] rastgeledagitim = new List<Savas_Araclari>[10];
-        for (int i = 0; i < rastgeledagitim.Length; i++)
-        {
-            rastgeledagitim[i] = new List<Savas_Araclari>();
-            rastgeledagitim[i].Add(new Ucak(input));
-            rastgeledagitim[i].Add(new Obus(input));
-            rastgeledagitim[i].Add(new Fikrateyn(input));
-
-            rastgeledagitim[i].Add(new Siha(input));
-            rastgeledagitim[i].Add(new KFS(input));
-            rastgeledagitim[i].Add(new Sida(input));
-        }
-
-        //aynisini pc icin yapalim
-
-        List<Savas_Araclari>[] rastgeledagitimpc = new List<Savas_Araclari>[10];
-        for (int i = 0; i < rastgeledagitimpc.Length; i++)
-        {
-            rastgeledagitimpc[i] = new List<Savas_Araclari>();
-            rastgeledagitimpc[i].Add(new Ucak(input));
-            rastgeledagitimpc[i].Add(new Obus(input));
-            rastgeledagitimpc[i].Add(new Fikrateyn(input));
-
-            rastgeledagitimpc[i].Add(new Siha(input));
-            rastgeledagitimpc[i].Add(new KFS(input));
-            rastgeledagitimpc[i].Add(new Sida(input));
-        }
-        
-
-        
-        //baslangic kart destesini olusturur
+        // Kart listesi oluştur
         cardlist.Add(new Ucak(input));
         cardlist.Add(new Obus(input));
         cardlist.Add(new Fikrateyn(input));
-        
-        
-        System.Random rand = new System.Random();
-        cardlist.Add(rastgeledagitim[0][rand.Next(0, 3)]);
-        cardlist.Add(rastgeledagitim[1][rand.Next(0, 3)]);
-        cardlist.Add(rastgeledagitim[2][rand.Next(0, 3)]);
-
-        
-        //cardlist.Add(new Ucak(10));
-        //cardlist.Add(new Ucak(10));
-        //cardlist.Add(new Ucak(10));
-
+        cardlist.Add(new Siha(input));
+        cardlist.Add(new KFS(input));
+        cardlist.Add(new Sida(input));
     }
 
-   public void SpawnPrefabs(string text,string saglik)
-   {   
-        int i=0;
-        
+    public void SpawnPrefabs(int baslangic)
+    {
+        int index = 0;
 
-       foreach (Savas_Araclari card in cardlist)
+        foreach (Savas_Araclari card in cardlist)
         {
             if (prefabDictionary.ContainsKey(card.AltSinif))
             {
-                
-                // Prefabı al
+                // Prefabı al ve spawnla
                 GameObject prefabToSpawn = prefabDictionary[card.AltSinif];
-                
-                // Prefabı spawnla
                 GameObject spawnedCard = Instantiate(prefabToSpawn, parentTransform);
 
-                // Pozisyonu ayarla
-                
+                // Pozisyon ayarı
                 RectTransform rectTransform = spawnedCard.GetComponent<RectTransform>();
+                rectTransform.anchoredPosition = new Vector2(index*spacing, 0);
 
-                PlayerCardScript cardScript = prefabToSpawn.GetComponent<PlayerCardScript>();
+                // Kartın seçilmesi için CardSelectHandler ekle
+                CardSelectHandler cardHandler = spawnedCard.AddComponent<CardSelectHandler>();
+                cardHandler.Initialize(targetPositions, positionOccupied,card,this);
 
+                // Kart bilgisi gönder
+                PlayerCardScript cardScript = spawnedCard.GetComponent<PlayerCardScript>();
                 if (cardScript != null)
                 {
-                    // Kart bilgilerini gönder
-                    cardScript.SetCardInfo(text,card.Dayaniklilik.ToString());
-                    
+                    cardScript.SetCardInfo(baslangic.ToString(), card.Dayaniklilik.ToString());
                 }
-                // Bir sonraki spawn pozisyonunu ayarla
-                rectTransform.anchoredPosition = new Vector2(i*spacing, 0);
-                i++;
+                
+                index++;
             }
             else
             {
-                Debug.LogWarning($"Prefab bulunamadi: {card.AltSinif}");
+                Debug.LogWarning($"Prefab bulunamadı: {card.AltSinif}");
             }
         }
-   }
+    }
+
+    public void AddSelectedCard(Savas_Araclari card)
+    {
+        selectedCards.Add(card);
+        Debug.Log($"Kart seçildi: {card.AltSinif}");
+    }
+
+    public void RemoveSelectedCard(Savas_Araclari card)
+    {
+         selectedCards.Remove(card);
+        // Kartın seçim durumunu sıfırla
+        card.isSelected = false;
+
+         // Slotların doluluk durumunu güncelle
+        positionOccupied[cardSelectHandler.assignedTargetIndex] = false;
+    }
 }
