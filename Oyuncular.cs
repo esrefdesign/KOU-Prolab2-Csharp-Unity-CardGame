@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-    class Oyuncular
+    public class Oyuncular
     {
 
-        Random Random = new Random();
+        System.Random Random = new System.Random();
         public int OyuncuID { get; set; }
         public string OyuncuAdi { get; set; }
         public int Skor { get; set; }
@@ -32,7 +33,7 @@ using System.Collections.Generic;
         public void SkorGoster(int artiş)
         {
             Skor += artiş;
-            Console.WriteLine($"{OyuncuAdi} Skor: {Skor}");
+            Debug.Log($"{OyuncuAdi} Skor: {Skor}");
 
         }
 
@@ -44,7 +45,7 @@ using System.Collections.Generic;
     }
 
     // Bilgisayar sınıfı
-    class Bilgisayar : Oyuncular
+    public class Bilgisayar : Oyuncular
     {
         // Constructor
         public Bilgisayar(int oyuncuID, int skor) : base(oyuncuID, "Bilgisayar", skor) { }
@@ -54,13 +55,13 @@ using System.Collections.Generic;
         {
             if (KartListesi.Count == 0)
             {
-                Console.WriteLine("Bilgisayarın elinde kart kalmadı.");
-                //return null;
+                Debug.Log("Bilgisayarın elinde kart kalmadı.");
+                
             }
 
            
 
-            Random random = new Random();
+            System.Random random = new System.Random();
             int index;
 
             bool hepsi_secili = true;
@@ -97,13 +98,13 @@ using System.Collections.Generic;
             }
 
             KartListesi.RemoveAt(index); // Kartı elden çıkar
-            Console.WriteLine($"Bilgisayar {secilenKart.AltSinif} sınıfından bir kart seçti.");
+            Debug.Log($"Bilgisayar {secilenKart.AltSinif} sınıfından bir kart seçti.");
             return secilenKart;
         }
     }
 
     // Kullanıcı sınıfı
-    class Kullanici : Oyuncular
+    public class Kullanici : Oyuncular
     {
         // Constructor
         public Kullanici(int oyuncuID, string oyuncuAdi, int skor) : base(oyuncuID, oyuncuAdi, skor) { }
@@ -113,14 +114,14 @@ using System.Collections.Generic;
         {
             if (KartListesi.Count == 0)
             {
-                Console.WriteLine("Elinizde kart kalmadı.");
+                Debug.Log("Elinizde kart kalmadı.");
                 return null;
             }
 
-            Console.WriteLine("Kartlarınız:");
+            Debug.Log("Kartlarınız:");
             for (int i = 0; i < KartListesi.Count; i++)
             {
-                Console.WriteLine($"{i + 1}: {KartListesi[i].AltSinif}, \nSinif: {KartListesi[i].Sinif}, \nDayaniklilik: {KartListesi[i].Dayaniklilik}, \nAvantaj: {KartListesi[i].Avantaj} {KartListesi[i].VurusAvantaji}\n");
+                Debug.Log($"{i + 1}: {KartListesi[i].AltSinif}, \nSinif: {KartListesi[i].Sinif}, \nDayaniklilik: {KartListesi[i].Dayaniklilik}, \nAvantaj: {KartListesi[i].Avantaj} {KartListesi[i].VurusAvantaji}\n");
             }
 
             Console.Write("Seçmek istediğiniz kartın numarasını girin: ");
@@ -162,7 +163,7 @@ using System.Collections.Generic;
             }
 
             KartListesi.RemoveAt(secim - 1); // Kartı elden çıkar
-            Console.WriteLine($"{OyuncuAdi}, {secilenKart.AltSinif} sınıfından bir kart seçti.");
+            Debug.Log($"{OyuncuAdi}, {secilenKart.AltSinif} sınıfından bir kart seçti.");
             return secilenKart;
         }
     }

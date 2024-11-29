@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEditor.U2D.Aseprite;
+using JetBrains.Annotations;
 
 public class spawnPlayerSlot : MonoBehaviour
 {
@@ -13,7 +14,12 @@ public class spawnPlayerSlot : MonoBehaviour
     private static bool[] positionOccupied;
     public Transform parentTransform; // Prefablerin ekleneceği Canvas üzerindeki ebeveyn objesi
     public float spacing = 150f; // Prefabler arası boşluk
-    public List<Savas_Araclari> cardlist = new List<Savas_Araclari>();
+
+    public  List<Savas_Araclari>[] rastgeledagitim = new List<Savas_Araclari>[10];
+
+    public Kullanici ben = new Kullanici(1, "esref", 0); 
+
+    //public List<Savas_Araclari> cardList= new List<Savas_Araclari>();
     public List<Savas_Araclari> selectedCards = new List<Savas_Araclari>();
 
     public Button logButton; // Button referansı
@@ -31,7 +37,6 @@ public class spawnPlayerSlot : MonoBehaviour
     private void StarterInput()
     {
         baslangic = Convert.ToInt32(inputFieldLogger.inputValue);
-        
         // Kart listesini oluştur
         GenerateTestCardList(baslangic);
 
@@ -72,19 +77,41 @@ public class spawnPlayerSlot : MonoBehaviour
     public void GenerateTestCardList(int input)
     {
         // Kart listesi oluştur
-        cardlist.Add(new Ucak(input));
-        cardlist.Add(new Obus(input));
-        cardlist.Add(new Fikrateyn(input));
-        cardlist.Add(new Siha(input));
-        cardlist.Add(new KFS(input));
-        cardlist.Add(new Sida(input));
+        for (int i = 0; i < rastgeledagitim.Length; i++)
+        {
+            rastgeledagitim[i] = new List<Savas_Araclari>();
+            rastgeledagitim[i].Add(new Ucak(input));
+            rastgeledagitim[i].Add(new Obus(input));
+            rastgeledagitim[i].Add(new Fikrateyn(input));
+
+            rastgeledagitim[i].Add(new Siha(input));
+            rastgeledagitim[i].Add(new KFS(input));
+            rastgeledagitim[i].Add(new Sida(input));
+        }
+
+        //aynisini pc icin yapalim
+
+        
+
+
+
+        //baslangic kart destesini olusturur
+        ben.KartListesi.Add(new Ucak(input));
+        ben.KartListesi.Add(new Obus(input));
+        ben.KartListesi.Add(new Fikrateyn(input));
+
+
+        System.Random rand = new System.Random();
+        ben.KartListesi.Add(rastgeledagitim[0][rand.Next(0, 3)]);
+        ben.KartListesi.Add(rastgeledagitim[1][rand.Next(0, 3)]);
+        ben.KartListesi.Add(rastgeledagitim[2][rand.Next(0, 3)]);
     }
 
     public void SpawnPrefabs(int baslangic)
     {
         int index = 0;
 
-        foreach (Savas_Araclari card in cardlist)
+        foreach (Savas_Araclari card in ben.KartListesi)
         {
             if (prefabDictionary.ContainsKey(card.AltSinif))
             {

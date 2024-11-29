@@ -30,7 +30,7 @@ using UnityEngine;
         // Kart puanı göstermek için metod
         public void KartPuaniGoster()
         {
-            Console.WriteLine($"Dayaniklilik: {Dayaniklilik}, Seviye Puani: {SeviyePuani}, Sınıf: {Sinif}");
+            Debug.Log($"Dayaniklilik: {Dayaniklilik}, Seviye Puani: {SeviyePuani}, Sınıf: {Sinif}");
         }
 
         // Abstract metod: Durum güncelleme
@@ -80,8 +80,8 @@ using UnityEngine;
         public override void DurumGuncelle(int vurduguHasar)
         {
             Dayaniklilik -= vurduguHasar;
-            SeviyePuani += vurduguHasar;
-            Console.WriteLine($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            //SeviyePuani += vurduguHasar;
+            Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
         }
     }
 
@@ -108,8 +108,8 @@ using UnityEngine;
         public override void DurumGuncelle(int vurduguHasar)
         {
             Dayaniklilik -= vurduguHasar;
-            SeviyePuani += vurduguHasar;
-            Console.WriteLine($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            //SeviyePuani += vurduguHasar;
+            Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
         }
     }
 
@@ -148,8 +148,8 @@ using UnityEngine;
         public override void DurumGuncelle(int vurduguHasar)
         {
             Dayaniklilik -= vurduguHasar;
-            SeviyePuani += vurduguHasar;
-            Console.WriteLine($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            //SeviyePuani += vurduguHasar;
+            Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
         }
     }
 
@@ -176,8 +176,8 @@ using UnityEngine;
         public override void DurumGuncelle(int vurduguHasar)
         {
             Dayaniklilik -= vurduguHasar;
-            SeviyePuani += vurduguHasar;
-            Console.WriteLine($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            //SeviyePuani += vurduguHasar;
+            Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
         }
     }
 
@@ -217,8 +217,8 @@ using UnityEngine;
         public override void DurumGuncelle(int vurduguHasar)
         {
             Dayaniklilik -= vurduguHasar;
-            SeviyePuani += vurduguHasar;
-            Console.WriteLine($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            //SeviyePuani += vurduguHasar;
+            Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
         }
     }
 
@@ -245,8 +245,8 @@ using UnityEngine;
         public override void DurumGuncelle(int vurduguHasar)
         {
             Dayaniklilik -= vurduguHasar;
-            SeviyePuani += vurduguHasar;
-            Console.WriteLine($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            //SeviyePuani += vurduguHasar;
+            Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
         }
     }
 

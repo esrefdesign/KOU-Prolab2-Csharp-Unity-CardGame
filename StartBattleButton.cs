@@ -43,7 +43,7 @@ public class StartBattleButton : MonoBehaviour
         }
 
         // Seçilen kartları BattleManager'a gönder
-        battleManager.InitializeLists(spawnPlayerSlot.selectedCards,spawnPlayerSlot.cardlist,spawnPlayerSlot.parentTransform,computerSlot.parentTransform);
+        battleManager.InitializeLists(spawnPlayerSlot.selectedCards,computerSlot.ComputerSelectedCard,spawnPlayerSlot.ben,computerSlot.computer,spawnPlayerSlot.parentTransform,computerSlot.parentTransform,computerSlot.selectedTransform);
     }
 
     
