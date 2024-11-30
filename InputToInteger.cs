@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class TMPInputToInteger : MonoBehaviour
 {
     public InputField inputField; // TMP_InputField referansı
-    public int intValue;              // Çevrilen int değer
+    public int intValue;     
+    
+    public string UserName;         // Çevrilen int değer
 
     // Bu metod InputField içeriği değiştiğinde çağrılır
     public void ConvertInputToInt()

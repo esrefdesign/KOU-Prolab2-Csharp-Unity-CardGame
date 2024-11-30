@@ -17,26 +17,45 @@ public class spawnPlayerSlot : MonoBehaviour
 
     public  List<Savas_Araclari>[] rastgeledagitim = new List<Savas_Araclari>[10];
 
-    public Kullanici ben = new Kullanici(1, "esref", 0); 
+    public Kullanici ben;
 
     //public List<Savas_Araclari> cardList= new List<Savas_Araclari>();
     public List<Savas_Araclari> selectedCards = new List<Savas_Araclari>();
 
     public Button logButton; // Button referansı
+    
     public InputFieldLogger inputFieldLogger;
-
     public Dictionary<string, GameObject> prefabDictionary;
     public int baslangic;
-    public PlayerCardScript playerCard;
+
+    public string UserName;
     private CardSelectHandler cardSelectHandler;
+    public InputField inputField,UserInput; // InputField referansı
+
+
+   
+    
     private void Start()
     {
+        
         logButton.onClick.AddListener(StarterInput);
     }
 
     private void StarterInput()
     {
-        baslangic = Convert.ToInt32(inputFieldLogger.inputValue);
+        if (int.TryParse(inputField.text, out int value))
+        {
+                baslangic = value; // Değeri kaydet
+                Debug.Log("Kullanıcının girdiği değer: " + baslangic);
+        }
+        else
+        {
+                Debug.LogWarning("Lütfen geçerli bir sayı girin!");
+        }
+       
+        
+        UserName=inputFieldLogger.UserName;
+        
         // Kart listesini oluştur
         GenerateTestCardList(baslangic);
 
@@ -93,7 +112,7 @@ public class spawnPlayerSlot : MonoBehaviour
 
         
 
-
+        ben = new Kullanici(1,UserName,0);
 
         //baslangic kart destesini olusturur
         ben.KartListesi.Add(new Ucak(input));
@@ -118,7 +137,7 @@ public class spawnPlayerSlot : MonoBehaviour
                 // Prefabı al ve spawnla
                 GameObject prefabToSpawn = prefabDictionary[card.AltSinif];
                 GameObject spawnedCard = Instantiate(prefabToSpawn, parentTransform);
-
+                
                 // Pozisyon ayarı
                 RectTransform rectTransform = spawnedCard.GetComponent<RectTransform>();
                 rectTransform.anchoredPosition = new Vector2(index*spacing, 0);
@@ -131,6 +150,7 @@ public class spawnPlayerSlot : MonoBehaviour
                 PlayerCardScript cardScript = spawnedCard.GetComponent<PlayerCardScript>();
                 if (cardScript != null)
                 {
+                    
                     cardScript.SetCardInfo(baslangic.ToString(), card.Dayaniklilik.ToString());
                 }
                 

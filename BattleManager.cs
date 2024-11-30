@@ -1,10 +1,23 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+
+
+using UnityEditor;
+using Microsoft.Unity.VisualStudio.Editor;
+using System;
 
 public class BattleManager : MonoBehaviour
 {
     public GameObject obusPrefab, ucakPrefab, fikrateynPrefab, kfsPrefab, sidaPrefab, sihaPrefab,computerPrefab;
+
+    public List <Savas_Araclari> randomCards = new List<Savas_Araclari>();
+    public List <Savas_Araclari> randomCardspc = new List<Savas_Araclari>();
+
+
+    public List <Savas_Araclari> randomCards2 = new List<Savas_Araclari>();
+    public List <Savas_Araclari> randomCardspc2 = new List<Savas_Araclari>();
 
     private Vector3[] targetPositions;
     private static bool[] positionOccupied;
@@ -18,8 +31,8 @@ public class BattleManager : MonoBehaviour
 
     public spawnPlayerSlot playerSlot; 
     public spawnComputerSlot computerSlot; 
-
-    public int adim = 1;
+   
+    public int adim = 0;
 
      // Kartları yöneten sınıf
 
@@ -28,8 +41,17 @@ public class BattleManager : MonoBehaviour
     private Transform ComputerParent;
 
     public Dictionary<string, GameObject> prefabDictionary;
+    
 
-
+    public void QuitGame()
+{
+    Debug.Log("Oyun kapatılıyor...");
+    #if UNITY_EDITOR
+        EditorApplication.isPlaying = false; // Editor'da oyunu durdur
+    #else
+        Application.Quit(); // Build edilmiş oyunda uygulamayı kapat
+    #endif
+    }
     public void InitializeLists(List<Savas_Araclari> playerSelectedCard,List<Savas_Araclari> computerSelectedCard,Kullanici player,Bilgisayar computer,Transform playerTransform,Transform computerTransform,Transform Selectedtransform)
     {
         this.computerSelectedCard=computerSelectedCard;
@@ -40,10 +62,7 @@ public class BattleManager : MonoBehaviour
         this.computerCardList=computer;
         this.ComputerSelecteds=Selectedtransform;
         
-        
-        
-        
-        playerSlot = FindFirstObjectByType<spawnPlayerSlot>();
+        playerSlot = FindAnyObjectByType<spawnPlayerSlot>();
         computerSlot= FindFirstObjectByType<spawnComputerSlot>();
 
         InitializeTargetPositions();
@@ -67,8 +86,11 @@ public class BattleManager : MonoBehaviour
     yield return new WaitForSeconds(delay);
 
     // Kartları tekrar spawnla
+    UpdateCardList();
+    
     RespawnUpdatedCards();
     RespawnComputerCards();
+
     }
 
     private void InitializeTargetPositions()
@@ -91,8 +113,13 @@ public class BattleManager : MonoBehaviour
     // Gecikme
 
         spawnComputerSelected();
+        encounter(playerSelectedCard, computerSelectedCard);
 
         yield return new WaitForSeconds(delay);
+        
+        StartCoroutine(RespawnWithDelay(2f));
+        ClearCardSlots();
+        
 
     // Kart oluşturma işlemi
     }
@@ -113,8 +140,8 @@ public class BattleManager : MonoBehaviour
 
                 // Pozisyon ayarı
                 RectTransform rectTransform = spawnedCard.GetComponent<RectTransform>();
-                rectTransform.anchoredPosition = new Vector2(index * spacing, 0);
-
+                rectTransform.anchoredPosition = new Vector2(index, 0);
+                rectTransform.localScale = new Vector3(1.5f, 1.5f, 1f);
                 // Kartın seçilmesi için CardSelectHandler ekle
                 
                 // Kart bilgisi gönder
@@ -131,27 +158,32 @@ public class BattleManager : MonoBehaviour
         
         }
     }
+    
     public void StartBattle()
     {
+
+        if(adim == 5) {
+           
+            
+            QuitGame();
+        }
         // Burada savaş işlemleri başlatılır
         Debug.Log($"Savaş başladı! Seçilen Kartlar:");
-        StartCoroutine(SpawnComputerSelectedWithDelay(2f));
+        if((adim < 5) || (computerCardList.KartListesi.Count > 0) || (playerCardList.KartListesi.Count > 0)) {
 
-        computerSelectedCard.Add(new Ucak(10));
-        computerSelectedCard.Add(new Ucak(10));
-       // 
-       computerSelectedCard.Add(new Ucak(10));
+            computerSelectedCard.Add(computerCardList.KartSec());
+            computerSelectedCard.Add(computerCardList.KartSec());
+            computerSelectedCard.Add(computerCardList.KartSec());
+        }
         
-
-
-        encounter(playerSelectedCard, computerSelectedCard);
-        UpdateCardList();
-
-
-        ClearCardSlots();
-        StartCoroutine(RespawnWithDelay(1.2f));
-        adim++;
+        StartCoroutine(SpawnComputerSelectedWithDelay(2f));
+    
+        
+        
         Debug.Log($"{adim}");
+
+        adim++;
+
         
     }
 
@@ -207,7 +239,7 @@ public class BattleManager : MonoBehaviour
             }
             if (computerSelectedCard[i].Dayaniklilik > 0)
             {
-                //computerCardList.KartListesi.Add(computerSelectedCard[i]);
+                computerCardList.KartListesi.Add(computerSelectedCard[i]);
             }
             else if (computerSelectedCard[i].Dayaniklilik <= 0)
             {
@@ -270,6 +302,102 @@ public class BattleManager : MonoBehaviour
             }
         }
         */
+        //random icin listeler olusturulur
+
+        
+            
+        
+        
+
+        randomCards.Add(new Ucak(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards.Add(new Obus(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards.Add(new Fikrateyn(playerCardList.KartListesi[0].SeviyePuani));
+
+        randomCards.Add(new Siha(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards.Add(new KFS(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards.Add(new Sida(playerCardList.KartListesi[0].SeviyePuani));
+
+
+        randomCardspc.Add(new Ucak(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc.Add(new Obus(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc.Add(new Fikrateyn(playerCardList.KartListesi[0].SeviyePuani));
+
+        randomCardspc.Add(new Siha(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc.Add(new KFS(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc.Add(new Sida(playerCardList.KartListesi[0].SeviyePuani));
+
+        //iki kart almak isterse
+
+        
+
+        randomCards2.Add(new Ucak(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards2.Add(new Obus(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards2.Add(new Fikrateyn(playerCardList.KartListesi[0].SeviyePuani));
+
+        randomCards2.Add(new Siha(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards2.Add(new KFS(playerCardList.KartListesi[0].SeviyePuani));
+        randomCards2.Add(new Sida(playerCardList.KartListesi[0].SeviyePuani));
+
+
+        randomCardspc2.Add(new Ucak(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc2.Add(new Obus(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc2.Add(new Fikrateyn(playerCardList.KartListesi[0].SeviyePuani));
+
+        randomCardspc2.Add(new Siha(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc2.Add(new KFS(playerCardList.KartListesi[0].SeviyePuani));
+        randomCardspc2.Add(new Sida(playerCardList.KartListesi[0].SeviyePuani));
+
+        if(playerCardList.Skor < 20)
+        {
+            playerCardList.KartListesi.Add(randomCards[random.Next(0, 2)]);
+            if (playerCardList.KartListesi.Count == 2)
+            {
+                playerCardList.KartListesi.Add(randomCards2[random.Next(0, 2)]);
+
+            }
+        }
+        else
+        {
+            playerCardList.KartListesi.Add(randomCards[random.Next(0, 5)]);
+            if (playerCardList.KartListesi.Count == 2)
+            {
+                playerCardList.KartListesi.Add(randomCards2[random.Next(0, 5)]);
+
+            }
+        }
+
+
+        if(playerCardList.KartListesi.Count < 1 || computerCardList.KartListesi.Count < 1)
+        {
+            Debug.Log("kart bitti.\n");
+            //break;
+            QuitGame();
+        }
+
+        if (computerCardList.Skor < 20)
+        {
+            computerCardList.KartListesi.Add(randomCardspc[random.Next(0, 2)]);
+            if (computerCardList.KartListesi.Count == 2)
+            {
+                computerCardList.KartListesi.Add(randomCardspc2[random.Next(0, 2)]);
+            }
+        }
+        else
+        {
+            computerCardList.KartListesi.Add(randomCardspc[random.Next(0, 5)]);
+            if (computerCardList.KartListesi.Count == 2)
+            {
+                computerCardList.KartListesi.Add(randomCardspc2[random.Next(0, 5)]);
+            }
+        }
+        
+
+        randomCards.Clear();
+        randomCardspc.Clear();
+        randomCards2.Clear();
+        randomCardspc2.Clear();
+
+
 
         selectedCards.Clear();
         computerSelectedCard.Clear();
@@ -302,6 +430,10 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(child.gameObject); // Her prefabın GameObject'ini yok et
         }
+        foreach (Transform child in ComputerSelecteds) // `parentTransform` sizin PlayerCardSlot canvas'ınızın Transform'u
+        {
+            Destroy(child.gameObject); // Her prefabın GameObject'ini yok et
+        }
     }
 
     private void RespawnUpdatedCards()
@@ -327,11 +459,7 @@ public class BattleManager : MonoBehaviour
                 CardEvent cardHandler = spawnedCard.AddComponent<CardEvent>();
                 cardHandler.Initialize(targetPositions, positionOccupied, card, this,playerSelectedCard); // Gerekirse son parametre `null`
 
-                CardSelectHandler existingCardScript = spawnedCard.GetComponent<CardSelectHandler>();
-                if (existingCardScript != null)
-                {
-                    Destroy(existingCardScript);
-                }
+               
 
                 // Kart bilgisi gönder
                 PlayerCardScript cardScript = spawnedCard.GetComponent<PlayerCardScript>();
@@ -342,10 +470,7 @@ public class BattleManager : MonoBehaviour
 
                 index++;
             }
-            else
-            {
-                Debug.LogWarning($"Prefab bulunamadı: {card.AltSinif}");
-            }
+            
 
         
         }

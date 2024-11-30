@@ -16,7 +16,6 @@ public class spawnComputerSlot : MonoBehaviour
     public Button logButton;
     public float spacing = 2f;
     public int baslangic;
-
     public List<Savas_Araclari>[] rastgeledagitimpc = new List<Savas_Araclari>[10]; 
 
     public void Start()
@@ -59,10 +58,12 @@ public class spawnComputerSlot : MonoBehaviour
     {   
 
         baslangic = Convert.ToInt32(inputFieldLogger.inputValue);
+        
+
         GenerateComputerCardList(baslangic);
 
-
-        for (int i = 0; i < computer.KartListesi.Count-1; i++)
+    
+        for (int i = 0; i < computer.KartListesi.Count; i++)
         {
             // Prefab'i oluştur
             GameObject newElement = Instantiate(prefab, parentTransform);
