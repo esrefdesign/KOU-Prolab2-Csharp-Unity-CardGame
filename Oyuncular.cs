@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +36,8 @@ using UnityEngine;
         {
             Skor += artiş;
             Debug.Log($"{OyuncuAdi} Skor: {Skor}");
+            File.AppendAllText("similasyon.txt", $"{OyuncuAdi} Skor: {Skor}\n");
+
 
         }
 
@@ -55,7 +59,10 @@ using UnityEngine;
         {
             if (KartListesi.Count == 0)
             {
-                Debug.Log("Bilgisayarın elinde kart kalmadı.");
+                Debug.Log("Bilgisayarin elinde kart kalmadi.");
+                File.AppendAllText("similasyon.txt", $"Bilgisayarin elinde kart kalmadi.\n");
+
+                
                 
             }
 
@@ -98,7 +105,20 @@ using UnityEngine;
             }
 
             KartListesi.RemoveAt(index); // Kartı elden çıkar
-            Debug.Log($"Bilgisayar {secilenKart.AltSinif} sınıfından bir kart seçti.");
+            Debug.Log($"Bilgisayar {secilenKart.AltSinif}   kart secti.");
+            //File.AppendAllText("similasyon.txt", $"Bilgisayar {secilenKart.AltSinif} kartini secti.\n");
+             try
+            {
+                // Dosya oluştur ve metni yaz
+                File.AppendAllText("similasyon.txt", $"Bilgisayar {secilenKart.AltSinif} kartini secti.\n");
+                Debug.Log("Dosya başarıyla yazıldı: " + "similasyon.txt");
+            }
+            catch (IOException e)
+            {
+                Debug.LogError("Dosya yazılırken bir hata oluştu: " + e.Message);
+            }
+
+            
             return secilenKart;
         }
     }
@@ -115,13 +135,18 @@ using UnityEngine;
             if (KartListesi.Count == 0)
             {
                 Debug.Log("Elinizde kart kalmadı.");
+                File.AppendAllText("similasyon.txt", $"Elnizde kart kalmadi\n");
+
                 return null;
             }
 
             Debug.Log("Kartlarınız:");
+                File.AppendAllText("similasyon.txt", $"Kartlariniz\n");
+
             for (int i = 0; i < KartListesi.Count; i++)
             {
                 Debug.Log($"{i + 1}: {KartListesi[i].AltSinif}, \nSinif: {KartListesi[i].Sinif}, \nDayaniklilik: {KartListesi[i].Dayaniklilik}, \nAvantaj: {KartListesi[i].Avantaj} {KartListesi[i].VurusAvantaji}\n");
+                
             }
 
             Console.Write("Seçmek istediğiniz kartın numarasını girin: ");
@@ -164,6 +189,8 @@ using UnityEngine;
 
             KartListesi.RemoveAt(secim - 1); // Kartı elden çıkar
             Debug.Log($"{OyuncuAdi}, {secilenKart.AltSinif} sınıfından bir kart seçti.");
+                File.AppendAllText("similasyon.txt", $"{OyuncuAdi}, {secilenKart.AltSinif} kartini secti\n");
+
             return secilenKart;
         }
     }

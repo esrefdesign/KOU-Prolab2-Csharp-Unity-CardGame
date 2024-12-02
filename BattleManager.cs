@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-
-
 using UnityEditor;
-using Microsoft.Unity.VisualStudio.Editor;
+using Unity;
+
 using System;
+using System.IO;
+
 
 public class BattleManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class BattleManager : MonoBehaviour
 
     public List <Savas_Araclari> randomCards = new List<Savas_Araclari>();
     public List <Savas_Araclari> randomCardspc = new List<Savas_Araclari>();
-
+    public SpawnTextOnCanvas spawnTextScript;
 
     public List <Savas_Araclari> randomCards2 = new List<Savas_Araclari>();
     public List <Savas_Araclari> randomCardspc2 = new List<Savas_Araclari>();
@@ -35,23 +36,26 @@ public class BattleManager : MonoBehaviour
     public int adim = 0;
 
      // Kartları yöneten sınıf
-
+    public Text winner;
+    
     public Transform ComputerSelecteds;
     private Transform PlayerParent;
     private Transform ComputerParent;
 
     public Dictionary<string, GameObject> prefabDictionary;
+    private string winnerInfo;
+    public void QuitGame()
+    {
+       
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // Editor'de oyunu durdur
+    #else
+        Application.Quit(); // Build edilmiş oyunda oyunu kapat
+    #endif
+        
+    }
     
 
-    public void QuitGame()
-{
-    Debug.Log("Oyun kapatılıyor...");
-    #if UNITY_EDITOR
-        EditorApplication.isPlaying = false; // Editor'da oyunu durdur
-    #else
-        Application.Quit(); // Build edilmiş oyunda uygulamayı kapat
-    #endif
-    }
     public void InitializeLists(List<Savas_Araclari> playerSelectedCard,List<Savas_Araclari> computerSelectedCard,Kullanici player,Bilgisayar computer,Transform playerTransform,Transform computerTransform,Transform Selectedtransform)
     {
         this.computerSelectedCard=computerSelectedCard;
@@ -62,6 +66,7 @@ public class BattleManager : MonoBehaviour
         this.computerCardList=computer;
         this.ComputerSelecteds=Selectedtransform;
         
+        spawnTextScript = FindAnyObjectByType<SpawnTextOnCanvas>();
         playerSlot = FindAnyObjectByType<spawnPlayerSlot>();
         computerSlot= FindFirstObjectByType<spawnComputerSlot>();
 
@@ -86,7 +91,7 @@ public class BattleManager : MonoBehaviour
     yield return new WaitForSeconds(delay);
 
     // Kartları tekrar spawnla
-    UpdateCardList();
+    //UpdateCardList();
     
     RespawnUpdatedCards();
     RespawnComputerCards();
@@ -159,17 +164,64 @@ public class BattleManager : MonoBehaviour
         }
     }
     
+    
+    
     public void StartBattle()
     {
+        adim++;
 
-        if(adim == 5) {
-           
+        if(adim > 10) {
             
-            QuitGame();
+            if(computerCardList.Skor>playerCardList.Skor)
+            {
+                winnerInfo = $"KAZANAN: Bilgisayar | SKOR:  {computerCardList.Skor}";
+                ClearCardSlots();
+                spawnTextScript.SpawnText(winnerInfo);
+                Debug.Log(winnerInfo);
+                File.AppendAllText("similasyon.txt", winnerInfo + "\n");
+
+               // winner.gameObject.SetActive(true);
+               // // Prefab içindeki Text bileşenine eriş ve içeriği güncelle
+               // if (winner.text != null)
+               // {
+               //     winner.text = winnerInfo; // Text'i güncelle
+               // }
+               // else
+               // {
+               //     Debug.LogWarning("WinnerText bileşeni atanmadı!");
+               // }
+               // 
+//
+
+                return;
+
+            }
+            else
+            { 
+                winnerInfo = $"KAZANAN: {playerCardList.OyuncuAdi} | SKOR: {playerCardList.Skor}";
+                ClearCardSlots();
+                spawnTextScript.SpawnText(winnerInfo);
+                Debug.Log(winnerInfo);
+                File.AppendAllText("similasyon.txt", winnerInfo + "\n");
+
+                
+                //if (winner.text != null)
+                //{
+                //    winner.text = winnerInfo; // Text'i güncelle
+                //}
+                //else
+                //{
+                //    Debug.LogWarning("WinnerText bileşeni atanmadı!");
+                //}
+               //
+//
+                return;
+            }
         }
+        
         // Burada savaş işlemleri başlatılır
-        Debug.Log($"Savaş başladı! Seçilen Kartlar:");
-        if((adim < 5) || (computerCardList.KartListesi.Count > 0) || (playerCardList.KartListesi.Count > 0)) {
+        
+        if((adim < 5) || (computerCardList.KartListesi.Count >1 ) || (playerCardList.KartListesi.Count > 1)) {
 
             computerSelectedCard.Add(computerCardList.KartSec());
             computerSelectedCard.Add(computerCardList.KartSec());
@@ -177,14 +229,11 @@ public class BattleManager : MonoBehaviour
         }
         
         StartCoroutine(SpawnComputerSelectedWithDelay(2f));
-    
-        
         
         Debug.Log($"{adim}");
+        File.AppendAllText("similasyon.txt", $"{adim}. adım.\n");
 
-        adim++;
 
-        
     }
 
     public void encounter(List<Savas_Araclari> selectedCards, List<Savas_Araclari> computerSelectedCard)
@@ -196,11 +245,15 @@ public class BattleManager : MonoBehaviour
             { 
                 selectedCards[i].DurumGuncelle(computerSelectedCard[i].Vurus + computerSelectedCard[i].VurusAvantaji);
                 ////Debug.Log();
+                File.AppendAllText("similasyon.txt", "\n");
+                ///
             }
             else
             {
                 selectedCards[i].DurumGuncelle(computerSelectedCard[i].Vurus);
                 //Debug.Log();
+                File.AppendAllText("similasyon.txt", "\n");
+
 
             }
 
@@ -208,12 +261,16 @@ public class BattleManager : MonoBehaviour
             {
                 computerSelectedCard[i].DurumGuncelle(selectedCards[i].Vurus + selectedCards[i].VurusAvantaji);
                 //Debug.Log();
+                File.AppendAllText("similasyon.txt", "\n");
+
 
             }
             else
             {
                 computerSelectedCard[i].DurumGuncelle(selectedCards[i].Vurus);
                 //Debug.Log();
+                File.AppendAllText("similasyon.txt", "\n");
+
 
             }
 
@@ -224,16 +281,26 @@ public class BattleManager : MonoBehaviour
             else if(selectedCards[i].Dayaniklilik <= 0)
             {
                 Debug.Log(selectedCards[i].AltSinif + " karti yenildi.");
+                File.AppendAllText("similasyon.txt", $"{selectedCards[i].AltSinif} karti yenildi.\n");
+
                 if (selectedCards[i].SeviyePuani <= 10)
                 {
                     computerCardList.SkorGoster(10);
+                    computerSelectedCard[i].KartPuaniGoster(10);
+
                     //Debug.Log();
+                    File.AppendAllText("similasyon.txt", "\n");
+
 
                 }
                 else
                 {
                     computerCardList.SkorGoster(selectedCards[i].SeviyePuani);
+                    computerSelectedCard[i].KartPuaniGoster(selectedCards[i].SeviyePuani);
+
                     //Debug.Log();
+                    File.AppendAllText("similasyon.txt", "\n");
+
 
                 }
             }
@@ -244,17 +311,28 @@ public class BattleManager : MonoBehaviour
             else if (computerSelectedCard[i].Dayaniklilik <= 0)
             {
                 Debug.Log(computerSelectedCard[i].AltSinif + " karti yenildi.");
+                File.AppendAllText("similasyon.txt", $"{computerSelectedCard[i].AltSinif} karti yenildi.\n");
+
 
                 if (computerSelectedCard[i].SeviyePuani <= 10)
                 {
                     playerCardList.SkorGoster(10);
+                    selectedCards[i].KartPuaniGoster(10);
+
                     //Debug.Log();
+                    File.AppendAllText("similasyon.txt", "\n");
+
+                    
 
                 }
                 else
                 {
                     playerCardList.SkorGoster(computerSelectedCard[i].SeviyePuani);
+                    selectedCards[i].KartPuaniGoster(computerSelectedCard[i].SeviyePuani);
+
                     //Debug.Log();
+                    File.AppendAllText("similasyon.txt", "\n");
+
                 }
             }
         }
@@ -349,49 +427,50 @@ public class BattleManager : MonoBehaviour
 
         if(playerCardList.Skor < 20)
         {
-            playerCardList.KartListesi.Add(randomCards[random.Next(0, 2)]);
-            if (playerCardList.KartListesi.Count == 2)
+            playerCardList.KartListesi.Add(randomCards[random.Next(0, 3)]);
+            if (playerCardList.KartListesi.Count < 3)
             {
-                playerCardList.KartListesi.Add(randomCards2[random.Next(0, 2)]);
+                playerCardList.KartListesi.Add(randomCards2[random.Next(0, 3)]);
 
             }
         }
         else
         {
-            playerCardList.KartListesi.Add(randomCards[random.Next(0, 5)]);
-            if (playerCardList.KartListesi.Count == 2)
+            playerCardList.KartListesi.Add(randomCards[random.Next(0, 6)]);
+            if (playerCardList.KartListesi.Count < 3)
             {
-                playerCardList.KartListesi.Add(randomCards2[random.Next(0, 5)]);
+                playerCardList.KartListesi.Add(randomCards2[random.Next(0, 6)]);
 
             }
         }
 
 
-        if(playerCardList.KartListesi.Count < 1 || computerCardList.KartListesi.Count < 1)
+        if(playerCardList.KartListesi.Count < 2 || computerCardList.KartListesi.Count < 2)
         {
             Debug.Log("kart bitti.\n");
+            File.AppendAllText("similasyon.txt", "kartlar bitti\n");
+
             //break;
-            QuitGame();
         }
 
         if (computerCardList.Skor < 20)
         {
-            computerCardList.KartListesi.Add(randomCardspc[random.Next(0, 2)]);
+            computerCardList.KartListesi.Add(randomCardspc[random.Next(0, 3)]);
             if (computerCardList.KartListesi.Count == 2)
             {
-                computerCardList.KartListesi.Add(randomCardspc2[random.Next(0, 2)]);
+                computerCardList.KartListesi.Add(randomCardspc2[random.Next(0, 3)]);
             }
         }
         else
         {
-            computerCardList.KartListesi.Add(randomCardspc[random.Next(0, 5)]);
+            computerCardList.KartListesi.Add(randomCardspc[random.Next(0, 6)]);
             if (computerCardList.KartListesi.Count == 2)
             {
-                computerCardList.KartListesi.Add(randomCardspc2[random.Next(0, 5)]);
+                computerCardList.KartListesi.Add(randomCardspc2[random.Next(0, 6)]);
             }
         }
         
-
+        //randomlar temizlendi ki daha sonra ici tekrar doldurulsun
         randomCards.Clear();
         randomCardspc.Clear();
         randomCards2.Clear();
@@ -401,7 +480,7 @@ public class BattleManager : MonoBehaviour
 
         selectedCards.Clear();
         computerSelectedCard.Clear();
-        //File.WriteAllText("similasyon.txt", "başarıyla yazıldı");
+        //File.AppendAllText("similasyon.txt", "başarıyla yazıldı");
 
         
     }
@@ -415,6 +494,7 @@ public class BattleManager : MonoBehaviour
             playerCardList.KartListesi.Remove(card);
             
             Debug.Log("basariyla silinen kart: "+card.AltSinif);
+            
         }
 
     }

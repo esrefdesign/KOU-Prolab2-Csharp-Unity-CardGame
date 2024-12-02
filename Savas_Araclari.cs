@@ -1,10 +1,12 @@
 using System;
+using System.IO;
+
 using UnityEngine;
 
     // Abstract Savaş Araçları Sınıfı
     public abstract class Savas_Araclari 
     {
-        public int SeviyePuani { get; set; }
+        public int SeviyePuani { get; set; } 
         public abstract int Dayaniklilik { get; set; }
         public abstract int Vurus { get; set; }
         public abstract string Sinif { get; }
@@ -28,9 +30,12 @@ using UnityEngine;
 
 
         // Kart puanı göstermek için metod
-        public void KartPuaniGoster()
+        public void KartPuaniGoster(int artis)
         {
+            SeviyePuani += artis;
             Debug.Log($"Dayaniklilik: {Dayaniklilik}, Seviye Puani: {SeviyePuani}, Sınıf: {Sinif}");
+            File.AppendAllText("similasyon.txt", $"Dayaniklilik: {Dayaniklilik}, Seviye Puani: {SeviyePuani}, Sınıf: {Sinif}\n");
+
         }
 
         // Abstract metod: Durum güncelleme
@@ -82,6 +87,8 @@ using UnityEngine;
             Dayaniklilik -= vurduguHasar;
             //SeviyePuani += vurduguHasar;
             Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            File.AppendAllText("similasyon.txt", $"{AltSinif} Durumu Guncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}\n");
+
         }
     }
 
@@ -110,6 +117,9 @@ using UnityEngine;
             Dayaniklilik -= vurduguHasar;
             //SeviyePuani += vurduguHasar;
             Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            File.AppendAllText("similasyon.txt", $"{AltSinif} Durumu Guncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}\n");
+
+            
         }
     }
 
@@ -150,6 +160,8 @@ using UnityEngine;
             Dayaniklilik -= vurduguHasar;
             //SeviyePuani += vurduguHasar;
             Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            File.AppendAllText("similasyon.txt", $"{AltSinif} Durumu Guncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}\n");
+
         }
     }
 
@@ -178,6 +190,8 @@ using UnityEngine;
             Dayaniklilik -= vurduguHasar;
             //SeviyePuani += vurduguHasar;
             Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            File.AppendAllText("similasyon.txt", $"{AltSinif} Durumu Guncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}\n");
+
         }
     }
 
@@ -219,6 +233,8 @@ using UnityEngine;
             Dayaniklilik -= vurduguHasar;
             //SeviyePuani += vurduguHasar;
             Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            File.AppendAllText("similasyon.txt", $"{AltSinif} Durumu Guncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}\n");
+
         }
     }
 
@@ -247,6 +263,8 @@ using UnityEngine;
             Dayaniklilik -= vurduguHasar;
             //SeviyePuani += vurduguHasar;
             Debug.Log($"{AltSinif} Durumu Güncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}");
+            File.AppendAllText("similasyon.txt", $"{AltSinif} Durumu Guncellendi: Dayaniklilik = {Dayaniklilik}, SeviyePuani = {SeviyePuani}\n");
+
         }
     }
 

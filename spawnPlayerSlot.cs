@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 using TMPro;
 using System;
-using UnityEditor.U2D.Aseprite;
-using JetBrains.Annotations;
+using System.IO;
+
 
 public class spawnPlayerSlot : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class spawnPlayerSlot : MonoBehaviour
 
     public Kullanici ben;
 
+    public int adim = 1;
+
     //public List<Savas_Araclari> cardList= new List<Savas_Araclari>();
     public List<Savas_Araclari> selectedCards = new List<Savas_Araclari>();
 
@@ -27,7 +30,6 @@ public class spawnPlayerSlot : MonoBehaviour
     public InputFieldLogger inputFieldLogger;
     public Dictionary<string, GameObject> prefabDictionary;
     public int baslangic;
-
     public string UserName;
     private CardSelectHandler cardSelectHandler;
     public InputField inputField,UserInput; // InputField referansı
@@ -54,7 +56,7 @@ public class spawnPlayerSlot : MonoBehaviour
         }
        
         
-        UserName=inputFieldLogger.UserName;
+        UserName=UserInput.text;
         
         // Kart listesini oluştur
         GenerateTestCardList(baslangic);
@@ -165,8 +167,18 @@ public class spawnPlayerSlot : MonoBehaviour
 
     public void AddSelectedCard(Savas_Araclari card)
     {
+        
         selectedCards.Add(card);
         Debug.Log($"Kart seçildi: {card.AltSinif}");
+        if(adim == 1){
+
+            File.WriteAllText("similasyon.txt", $"Kart seçildi: {card.AltSinif}");
+        }
+        else{
+            File.AppendAllText("similasyon.txt", $"Kart seçildi: {card.AltSinif}");
+            
+        }
+        adim++;
     }
 
     public void RemoveSelectedCard(Savas_Araclari card)
